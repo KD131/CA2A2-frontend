@@ -16,13 +16,15 @@ import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import FunStuffPage from "./pages/FunStuffPage";
 
+import { userContext } from "./auth/userContext";
+
 
 export default function App() {
   const navigate = useNavigate();
   const { login, logout, loggedIn, getUser } = userFacade();
   const [loggedInState, setLoggedInState] = useState(loggedIn());
   const [userState, setUserState] = useState(getUser());
-
+  
   function logoutProtocol() {
     if (loggedInState) setLoggedInState(false);
     logout();
@@ -46,6 +48,7 @@ export default function App() {
   return (
     <Container fluid="sm" className="wrapper">
       <Hero />
+      <userContext.Provider value={userState}>
       <NavBar loggedIn={loggedInState} user={userState} />
       <Container className="pageContent pt-3 pb-3" fluid="sm">
         <Routes>
@@ -61,6 +64,7 @@ export default function App() {
           <Route path="*" element={<NoMatchPage />} />
         </Routes>
       </Container>
+      </userContext.Provider>
     </Container>
   );
 }

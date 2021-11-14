@@ -1,19 +1,21 @@
 import { NavLink } from "react-router-dom";
-
-export default function PrivateNavItem({ to, text, allowedRole, user }) {
+import { userContext } from "../../auth/userContext";
+export default function PrivateNavItem({ to, text, allowedRole }) {
     function isActive({ isActive }) {
         return isActive ? "active" : "";
     }
 
-    function isAllowed() {
+    function isAllowed(user) {
         return user && (user.roles.includes(allowedRole) || allowedRole === "any");
     }
 
     return (
-        isAllowed() && <li>
-            <NavLink
-            className={isActive}
-            to={to} end>{text}</NavLink>
-        </li>
+        <userContext.Consumer>
+            {user => (isAllowed(user) && <li>
+                <NavLink
+                    className={isActive}
+                    to={to} end>{text}</NavLink>
+            </li>)}
+        </userContext.Consumer>
     );
 }
