@@ -1,7 +1,6 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Container } from "react-bootstrap";
-import userFacade from "./auth/userFacade";
 import NavBar from "./components/nav/NavBar";
 import Hero from "./components/Hero";
 // PAGES:
@@ -15,55 +14,36 @@ import NoMatchPage from "./pages/NoMatchPage";
 import LoginPage from "./pages/LoginPage";
 import LogoutPage from "./pages/LogoutPage";
 import FunStuffPage from "./pages/FunStuffPage";
-
-import { userContext } from "./auth/userContext";
-
+import { userContext } from "./auth/authContexts";
+import useUser from "./auth/useUser";
 
 export default function App() {
   const navigate = useNavigate();
-  const { login, logout, loggedIn, getUser } = userFacade();
-  const [loggedInState, setLoggedInState] = useState(loggedIn());
-  const [userState, setUserState] = useState(getUser());
-  
-  function logoutProtocol() {
-    if (loggedInState) setLoggedInState(false);
-    logout();
-    setUserState(null);
-    navigate("/");
-  }
-
-  function loginProtocol(user, pass) {
-    login(user, pass)
-      .then(res => {
-        setUserState(res);
-        if (!loggedInState) setLoggedInState(true);
-        navigate("/");
-      });
-  }
+  const [user, setToken] = useUser();
 
   useEffect(() => {
-    if (!loggedIn() && loggedInState) logoutProtocol();
-  });
+    navigate("/");
+  }, [user]);
 
   return (
     <Container fluid="sm" className="wrapper">
       <Hero />
-      <userContext.Provider value={userState}>
-      <NavBar loggedIn={loggedInState} user={userState} />
-      <Container className="pageContent pt-3 pb-3" fluid="sm">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/wikipedia" element={<WikipediaPage />} />
-          <Route path="/dadjokes" element={<DadJokePage />} />
-          <Route path="/funstuff" element={<FunStuffPage />} />
-          <Route path="/user" element={<UserPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/login" element={<LoginPage login={loginProtocol} />} />
-          <Route path="/logout" element={<LogoutPage logout={logoutProtocol} />} />
-          <Route path="*" element={<NoMatchPage />} />
-        </Routes>
-      </Container>
+      <userContext.Provider value={user}>
+        <NavBar />
+        <Container className="pageContent pt-3 pb-3" fluid="sm">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/wikipedia" element={<WikipediaPage />} />
+            <Route path="/dadjokes" element={<DadJokePage />} />
+            <Route path="/funstuff" element={<FunStuffPage />} />
+            <Route path="/user" element={<UserPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/login" element={<LoginPage setToken={setToken} />} />
+            <Route path="/logout" element={<LogoutPage setToken={setToken} />} />
+            <Route path="*" element={<NoMatchPage />} />
+          </Routes>
+        </Container>
       </userContext.Provider>
     </Container>
   );

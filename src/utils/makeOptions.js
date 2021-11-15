@@ -1,8 +1,4 @@
-import tokenUtil from "../auth/tokenUtil";
-
 export default function makeOptions(method, addToken, body) {
-    const { getToken } = tokenUtil();
-    const token = (addToken) ? getToken() : null;
     var opts = {
         method: method,
         headers: {
@@ -10,7 +6,7 @@ export default function makeOptions(method, addToken, body) {
             'Accept': 'application/json',
         }
     }
-    if (token) opts.headers["x-access-token"] = token;
+    if (addToken) opts.headers["x-access-token"] = localStorage.getItem('jwtToken');;
     if (body) opts.body = JSON.stringify(body);
 
     return opts;

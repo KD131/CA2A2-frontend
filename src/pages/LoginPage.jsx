@@ -1,10 +1,10 @@
 import LoginForm from "../components/LoginForm";
 
-export default function LoginPage({ login }) {
+export default function LoginPage({setToken}) {
     return (
         <>
             <h2 align="center">Sign in</h2>
-            <LoginForm login={login} />
+            <LoginForm setToken={setToken} />
         </>
     );
 }
