@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { userContext } from "../../auth/authContexts";
+import { userContext } from "../../auth/userContext";
 export default function PrivateNavItem({ to, text, allowedRole }) {
     function isActive({ isActive }) {
         return isActive ? "active" : "";

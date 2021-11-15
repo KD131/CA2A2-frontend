@@ -25,7 +25,10 @@ export default function useUser() {
     }
 
     useEffect(() => {
-        if (!token) return;
+        if (!token) {
+            if (payload) setPayload(null);
+            return;
+        }
         const { exp } = payload;
         const expiresIn = (exp * 1000) - Date.now();
         setTimeout(() => {
@@ -33,15 +36,20 @@ export default function useUser() {
             setToken(null);
             console.log("EXP TIMER EXPIRED");
         }, expiresIn);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
 
 
     useEffect(() => {
-        if (!payload) return;
+        if (!payload) {
+            if (user) setUser(null);
+            return;
+        }
         const { username, roles } = payload;
         const rolesArray = roles.split(",");
         setUser({ username: username, roles: rolesArray });
         console.log("USER SET");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [payload]);
 
     return [user, token, setToken];

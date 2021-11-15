@@ -12,24 +12,23 @@ import UserPage from "./pages/UserPage";
 import AdminPage from "./pages/AdminPage";
 import NoMatchPage from "./pages/NoMatchPage";
 import LoginPage from "./pages/LoginPage";
-import LogoutPage from "./pages/LogoutPage";
 import FunStuffPage from "./pages/FunStuffPage";
-import { userContext } from "./auth/authContexts";
+import { userContext } from "./auth/userContext";
 import useUser from "./auth/useUser";
 
 export default function App() {
   const navigate = useNavigate();
-  const [user, setToken] = useUser();
-
+  const [user, token, setToken] = useUser();
   useEffect(() => {
     navigate("/");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
     <Container fluid="sm" className="wrapper">
       <Hero />
       <userContext.Provider value={user}>
-        <NavBar />
+        <NavBar setToken={setToken} />
         <Container className="pageContent pt-3 pb-3" fluid="sm">
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -40,7 +39,6 @@ export default function App() {
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<LoginPage setToken={setToken} />} />
-            <Route path="/logout" element={<LogoutPage setToken={setToken} />} />
             <Route path="*" element={<NoMatchPage />} />
           </Routes>
         </Container>
