@@ -5,7 +5,6 @@ import { SERVER_URL } from "../settings";
 import makeOptions from "../utils/makeOptions";
 import handleHttpErrors from "../utils/handleHttpErrors";
 export default function LoginForm({ setToken }) {
-    console.log(setToken);
     const URL = `${SERVER_URL}/api/login`;
     const [usernameValue, setUsernameValue] = useState();
     const [passwordValue, setPasswordValue] = useState();
